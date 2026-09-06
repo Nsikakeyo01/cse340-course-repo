@@ -1,6 +1,7 @@
 <%- include('partials/header') %>
 
 <main>
+
     <h1><%= title %></h1>
 
     <p>
@@ -11,47 +12,42 @@
 
     <h2>Available Service Projects</h2>
 
-    <ul>
-        <li>
-            <h2>Community Cleanup</h2>
+    <% if (projects && projects.length > 0) { %>
 
-            <p>
-                Join volunteers in cleaning and improving shared community
-                spaces while promoting environmental responsibility and
-                community pride.
-            </p>
-        </li>
+        <ul>
+            <% projects.forEach(project => { %>
 
-        <li>
-            <h2>Educational Support</h2>
+                <li>
+                    <strong>
+                        <%= new Date(project.project_date).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            timeZone: 'UTC'
+                        }) %>:
+                        <%= project.title %>
+                        (<%= project.organization_name %>)
+                    </strong>
 
-            <p>
-                Help students and learners through tutoring, mentoring,
-                educational activities, and access to useful learning
-                resources.
-            </p>
-        </li>
+                    <p>
+                        <%= project.description %>
+                    </p>
 
-        <li>
-            <h2>Community Outreach</h2>
+                    <p>
+                        <strong>Location:</strong>
+                        <%= project.location %>
+                    </p>
+                </li>
 
-            <p>
-                Support local communities by participating in activities
-                that provide assistance to individuals and families who need
-                additional support.
-            </p>
-        </li>
+            <% }) %>
+        </ul>
 
-        <li>
-            <h2>Health and Wellness Awareness</h2>
+    <% } else { %>
 
-            <p>
-                Participate in activities that encourage healthy lifestyles,
-                wellness education, and greater awareness of physical and
-                emotional well-being.
-            </p>
-        </li>
-    </ul>
+        <p>No service projects found.</p>
+
+    <% } %>
+
 </main>
 
 <%- include('partials/footer') %>
