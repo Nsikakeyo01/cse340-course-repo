@@ -3,7 +3,7 @@ import db from './db.js';
 /**
  * Get all partner organizations.
  */
-async function getAllOrganizations() {
+const getAllOrganizations = async () => {
     const sql = `
         SELECT
             organization_id,
@@ -18,6 +18,6 @@ async function getAllOrganizations() {
     const result = await db.query(sql);
 
     return result.rows;
-}
+};
 
 export { getAllOrganizations };

@@ -3,7 +3,7 @@ import db from './db.js';
 /**
  * Get all service projects with their organization names.
  */
-async function getAllProjects() {
+const getAllProjects = async () => {
     const sql = `
         SELECT
             p.project_id,
@@ -22,6 +22,6 @@ async function getAllProjects() {
     const result = await db.query(sql);
 
     return result.rows;
-}
+};
 
 export { getAllProjects };
