@@ -384,6 +384,19 @@ footer p {
         margin: 0 0 0.75rem;
     }
 }
+main > img {
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    max-height: 220px;
+    object-fit: contain;
+    margin: 1rem 0 1.5rem;
+    padding: 0.75rem;
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
 
 /* =========================================
    VERY SMALL PHONES
