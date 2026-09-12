@@ -36,7 +36,7 @@ const getProjectsByCategoryId = async (categoryId) => {
             p.project_id,
             p.title,
             p.description,
-            p.date,
+            p.project_date AS date,
             p.location,
             p.organization_id,
             o.name AS organization_name
@@ -46,7 +46,7 @@ const getProjectsByCategoryId = async (categoryId) => {
         JOIN organizations AS o
             ON p.organization_id = o.organization_id
         WHERE pc.category_id = $1
-        ORDER BY p.date ASC
+        ORDER BY p.project_date ASC
     `;
 
     const queryParams = [categoryId];

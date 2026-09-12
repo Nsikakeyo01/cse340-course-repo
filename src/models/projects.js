@@ -1,37 +1,39 @@
 import db from './db.js';
 
-const getUpcomingProjects = async (numberOfProjects) => {
+/**
+ * Get all service projects.
+ */
+const getAllProjects = async () => {
     const query = `
         SELECT
             p.project_id,
             p.title,
             p.description,
-            p.date,
+            p.project_date AS date,
             p.location,
             p.organization_id,
             o.name AS organization_name
         FROM projects AS p
         JOIN organizations AS o
             ON p.organization_id = o.organization_id
-        WHERE p.date >= CURRENT_DATE
-        ORDER BY p.date ASC
-        LIMIT $1
+        ORDER BY p.project_date ASC
     `;
 
-    const queryParams = [numberOfProjects];
-
-    const result = await db.query(query, queryParams);
+    const result = await db.query(query);
 
     return result.rows;
 };
 
+/**
+ * Get one project by ID.
+ */
 const getProjectDetails = async (projectId) => {
     const query = `
         SELECT
             p.project_id,
             p.title,
             p.description,
-            p.date,
+            p.project_date AS date,
             p.location,
             p.organization_id,
             o.name AS organization_name
@@ -48,6 +50,9 @@ const getProjectDetails = async (projectId) => {
     return result.rows.length > 0 ? result.rows[0] : null;
 };
 
+/**
+ * Get all categories belonging to a project.
+ */
 const getCategoriesByProjectId = async (projectId) => {
     const query = `
         SELECT
@@ -68,7 +73,7 @@ const getCategoriesByProjectId = async (projectId) => {
 };
 
 export {
-    getUpcomingProjects,
+    getAllProjects,
     getProjectDetails,
     getCategoriesByProjectId
 };

@@ -1,11 +1,14 @@
+
 <%- include('partials/header') %>
 
 <main>
     <h1><%= title %></h1>
 
     <% if (projects && projects.length > 0) { %>
+
         <ul>
             <% projects.forEach(project => { %>
+
                 <li>
                     <h2>
                         <a href="/project/<%= project.project_id %>">
@@ -13,7 +16,9 @@
                         </a>
                     </h2>
 
-                    <p><%= project.description %></p>
+                    <p>
+                        <%= project.description %>
+                    </p>
 
                     <p>
                         <strong>Date:</strong>
@@ -32,10 +37,14 @@
                         </a>
                     </p>
                 </li>
+
             <% }) %>
         </ul>
+
     <% } else { %>
-        <p>No upcoming service projects found.</p>
+
+        <p>No service projects found.</p>
+
     <% } %>
 </main>
 

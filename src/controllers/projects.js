@@ -1,15 +1,13 @@
 import {
-    getUpcomingProjects,
+    getAllProjects,
     getProjectDetails,
     getCategoriesByProjectId
 } from '../models/projects.js';
 
-const NUMBER_OF_UPCOMING_PROJECTS = 5;
-
 const showProjectsPage = async (req, res) => {
     try {
-        const title = 'Upcoming Service Projects';
-        const projects = await getUpcomingProjects(NUMBER_OF_UPCOMING_PROJECTS);
+        const title = 'Service Projects';
+        const projects = await getAllProjects();
 
         res.render('projects', {
             title,
@@ -17,6 +15,7 @@ const showProjectsPage = async (req, res) => {
         });
     } catch (error) {
         console.error('Error loading projects:', error);
+
         res.status(500).render('500', {
             title: 'Server Error'
         });
@@ -43,6 +42,7 @@ const showProjectDetailsPage = async (req, res) => {
         });
     } catch (error) {
         console.error('Error loading project details:', error);
+
         res.status(500).render('500', {
             title: 'Server Error'
         });
