@@ -1,20 +1,63 @@
 import db from './db.js';
 
-/**
- * Get all service project categories.
- */
 const getAllCategories = async () => {
-    const sql = `
+    const query = `
         SELECT
             category_id,
             name
         FROM categories
-        ORDER BY name;
+        ORDER BY name ASC
     `;
 
-    const result = await db.query(sql);
+    const result = await db.query(query);
 
     return result.rows;
 };
 
-export { getAllCategories };
+const getCategoryDetails = async (categoryId) => {
+    const query = `
+        SELECT
+            category_id,
+            name
+        FROM categories
+        WHERE category_id = $1
+    `;
+
+    const queryParams = [categoryId];
+
+    const result = await db.query(query, queryParams);
+
+    return result.rows.length > 0 ? result.rows[0] : null;
+};
+
+const getProjectsByCategoryId = async (categoryId) => {
+    const query = `
+        SELECT
+            p.project_id,
+            p.title,
+            p.description,
+            p.date,
+            p.location,
+            p.organization_id,
+            o.name AS organization_name
+        FROM projects AS p
+        JOIN project_categories AS pc
+            ON p.project_id = pc.project_id
+        JOIN organizations AS o
+            ON p.organization_id = o.organization_id
+        WHERE pc.category_id = $1
+        ORDER BY p.date ASC
+    `;
+
+    const queryParams = [categoryId];
+
+    const result = await db.query(query, queryParams);
+
+    return result.rows;
+};
+
+export {
+    getAllCategories,
+    getCategoryDetails,
+    getProjectsByCategoryId
+};
