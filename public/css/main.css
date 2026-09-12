@@ -447,8 +447,8 @@ main .home-image {
     display: block;
     width: 100%;
     max-width: 850px;
-    height: 350px;
+    height: auto;
     margin: 1.5rem auto;
     border-radius: 12px;
-    object-fit: cover;
+    object-fit: contain;
 }
