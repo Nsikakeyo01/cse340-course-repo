@@ -1,7 +1,14 @@
 <%- include('partials/header') %>
 
 <main>
+
     <h1><%= title %></h1>
+
+    <% if (messages && messages.notice && messages.notice.length > 0) { %>
+        <p class="success-message" role="status">
+            <%= messages.notice[0] %>
+        </p>
+    <% } %>
 
     <p>
         Explore service opportunities in different areas where volunteers
@@ -12,6 +19,7 @@
     <h2>Service Project Categories</h2>
 
     <% if (categories && categories.length > 0) { %>
+
         <ul>
             <% categories.forEach(category => { %>
                 <li>
@@ -23,9 +31,13 @@
                 </li>
             <% }) %>
         </ul>
+
     <% } else { %>
+
         <p>No service project categories found.</p>
+
     <% } %>
+
 </main>
 
 <%- include('partials/footer') %>

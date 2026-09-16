@@ -1,15 +1,29 @@
-
 <%- include('partials/header') %>
 
 <main>
+
     <h1><%= title %></h1>
+
+    <p>
+        <a href="/new-project">
+            Create New Service Project
+        </a>
+    </p>
+
+    <% if (messages && messages.notice && messages.notice.length > 0) { %>
+        <p class="success-message" role="status">
+            <%= messages.notice[0] %>
+        </p>
+    <% } %>
 
     <% if (projects && projects.length > 0) { %>
 
         <ul>
+
             <% projects.forEach(project => { %>
 
                 <li>
+
                     <h2>
                         <a href="/project/<%= project.project_id %>">
                             <%= project.title %>
@@ -32,13 +46,16 @@
 
                     <p>
                         <strong>Organization:</strong>
+
                         <a href="/organization/<%= project.organization_id %>">
                             <%= project.organization_name %>
                         </a>
                     </p>
+
                 </li>
 
             <% }) %>
+
         </ul>
 
     <% } else { %>
@@ -46,6 +63,7 @@
         <p>No service projects found.</p>
 
     <% } %>
+
 </main>
 
 <%- include('partials/footer') %>

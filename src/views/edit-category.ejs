@@ -1,0 +1,35 @@
+
+<%- include('partials/header') %>
+
+<main>
+
+    <h1><%= title %></h1>
+
+    <% if (typeof error !== 'undefined') { %>
+        <p class="error-message" role="alert">
+            <%= error %>
+        </p>
+    <% } %>
+
+    <form action="/edit-category/<%= category.category_id %>" method="POST">
+
+        <div>
+            <label for="name">Category Name:</label>
+
+            <input
+                type="text"
+                id="name"
+                name="name"
+                value="<%= category.name %>"
+                required
+                maxlength="100"
+            >
+        </div>
+
+        <button type="submit">Update Category</button>
+
+    </form>
+
+</main>
+
+<%- include('partials/footer') %>

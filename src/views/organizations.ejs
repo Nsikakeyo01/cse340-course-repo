@@ -1,6 +1,7 @@
 <%- include('partials/header') %>
 
 <main>
+
     <h1><%= title %></h1>
 
     <p>
@@ -8,17 +9,27 @@
         service opportunities and making a positive impact in communities.
     </p>
 
+    <p>
+        <a href="/new-organization">Create New Organization</a>
+    </p>
+
     <h2>Our Partner Organizations</h2>
 
     <% if (organizations && organizations.length > 0) { %>
+
         <ul>
+
             <% organizations.forEach(organization => { %>
+
                 <li>
+
                     <% if (organization.logo_filename) { %>
+
                         <img
                             src="/images/<%= organization.logo_filename %>"
                             alt="<%= organization.name %> logo"
                         >
+
                     <% } %>
 
                     <h2>
@@ -33,16 +44,24 @@
 
                     <p>
                         <strong>Email:</strong>
+
                         <a href="mailto:<%= organization.contact_email %>">
                             <%= organization.contact_email %>
                         </a>
                     </p>
+
                 </li>
+
             <% }) %>
+
         </ul>
+
     <% } else { %>
+
         <p>No partner organizations found.</p>
+
     <% } %>
+
 </main>
 
 <%- include('partials/footer') %>

@@ -1,6 +1,8 @@
 import 'dotenv/config';
 
 import express from 'express';
+import session from 'express-session';
+import flash from 'connect-flash';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
@@ -18,6 +20,27 @@ const app = express();
 // View engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
+
+// Middleware for parsing HTML form submissions
+app.use(express.urlencoded({ extended: true }));
+
+// Session middleware
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET || 'cse340-development-secret',
+        resave: false,
+        saveUninitialized: false
+    })
+);
+
+// Flash message middleware
+app.use(flash());
+
+// Make flash messages available to all EJS views
+app.use((req, res, next) => {
+    res.locals.messages = req.flash();
+    next();
+});
 
 // Static files
 app.use(express.static(path.join(__dirname, 'public')));

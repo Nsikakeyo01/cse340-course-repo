@@ -1,0 +1,98 @@
+<%- include('partials/header') %>
+
+<main>
+
+    <h1><%= title %></h1>
+
+    <% if (typeof error !== 'undefined') { %>
+
+        <p class="error-message" role="alert">
+            <%= error %>
+        </p>
+
+    <% } %>
+
+    <form
+        action="/edit-project/<%= project.project_id %>"
+        method="POST"
+    >
+
+        <div>
+            <label for="title">Project Title:</label>
+
+            <input
+                type="text"
+                id="title"
+                name="title"
+                value="<%= project.title %>"
+                required
+                maxlength="100"
+            >
+        </div>
+
+        <div>
+            <label for="description">Description:</label>
+
+            <textarea
+                id="description"
+                name="description"
+                rows="5"
+            ><%= project.description %></textarea>
+        </div>
+
+        <div>
+            <label for="project_date">Project Date:</label>
+
+            <input
+                type="date"
+                id="project_date"
+                name="project_date"
+                value="<%= project.date %>"
+            >
+        </div>
+
+        <div>
+            <label for="location">Location:</label>
+
+            <input
+                type="text"
+                id="location"
+                name="location"
+                value="<%= project.location %>"
+            >
+        </div>
+
+        <div>
+            <label for="organization_id">Organization:</label>
+
+            <select
+                id="organization_id"
+                name="organization_id"
+                required
+            >
+
+                <option value="">-- Select an Organization --</option>
+
+                <% organizations.forEach(organization => { %>
+
+                    <option
+                        value="<%= organization.organization_id %>"
+                        <%= String(organization.organization_id) === String(project.organization_id) ? 'selected' : '' %>
+                    >
+                        <%= organization.name %>
+                    </option>
+
+                <% }) %>
+
+            </select>
+        </div>
+
+        <button type="submit">
+            Update Project
+        </button>
+
+    </form>
+
+</main>
+
+<%- include('partials/footer') %>

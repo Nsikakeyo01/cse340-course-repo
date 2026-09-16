@@ -5,12 +5,14 @@
     <h1><%= title %></h1>
 
     <% if (typeof error !== 'undefined') { %>
+
         <p class="error-message" role="alert">
             <%= error %>
         </p>
+
     <% } %>
 
-    <form action="/edit-organization/<%= organization.organization_id %>" method="POST">
+    <form action="/new-organization" method="POST">
 
         <div>
             <label for="name">Organization Name:</label>
@@ -19,7 +21,7 @@
                 type="text"
                 id="name"
                 name="name"
-                value="<%= organization.name %>"
+                value="<%= typeof name !== 'undefined' ? name : '' %>"
                 required
                 maxlength="100"
             >
@@ -32,7 +34,7 @@
                 id="description"
                 name="description"
                 rows="5"
-            ><%= organization.description %></textarea>
+            ><%= typeof description !== 'undefined' ? description : '' %></textarea>
         </div>
 
         <div>
@@ -42,7 +44,7 @@
                 type="email"
                 id="contact_email"
                 name="contact_email"
-                value="<%= organization.contact_email %>"
+                value="<%= typeof contact_email !== 'undefined' ? contact_email : '' %>"
             >
         </div>
 
@@ -53,11 +55,11 @@
                 type="text"
                 id="logo_filename"
                 name="logo_filename"
-                value="<%= organization.logo_filename %>"
+                value="<%= typeof logo_filename !== 'undefined' ? logo_filename : '' %>"
             >
         </div>
 
-        <button type="submit">Update Organization</button>
+        <button type="submit">Create Organization</button>
 
     </form>
 

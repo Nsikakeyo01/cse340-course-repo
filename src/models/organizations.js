@@ -66,8 +66,76 @@ const getProjectsByOrganizationId = async (organizationId) => {
     return result.rows;
 };
 
+/**
+ * Create a new organization.
+ */
+const createOrganization = async (
+    name,
+    description,
+    contactEmail,
+    logoFilename
+) => {
+    const sql = `
+        INSERT INTO organizations (
+            name,
+            description,
+            contact_email,
+            logo_filename
+        )
+        VALUES ($1, $2, $3, $4)
+        RETURNING organization_id;
+    `;
+
+    const queryParams = [
+        name,
+        description,
+        contactEmail,
+        logoFilename
+    ];
+
+    const result = await db.query(sql, queryParams);
+
+    return result.rows[0];
+};
+
+/**
+ * Update an existing organization.
+ */
+const updateOrganization = async (
+    organizationId,
+    name,
+    description,
+    contactEmail,
+    logoFilename
+) => {
+    const sql = `
+        UPDATE organizations
+        SET
+            name = $1,
+            description = $2,
+            contact_email = $3,
+            logo_filename = $4
+        WHERE organization_id = $5
+        RETURNING organization_id;
+    `;
+
+    const queryParams = [
+        name,
+        description,
+        contactEmail,
+        logoFilename,
+        organizationId
+    ];
+
+    const result = await db.query(sql, queryParams);
+
+    return result.rows.length > 0 ? result.rows[0] : null;
+};
+
 export {
     getAllOrganizations,
     getOrganizationDetails,
-    getProjectsByOrganizationId
+    getProjectsByOrganizationId,
+    createOrganization,
+    updateOrganization
 };

@@ -1,0 +1,98 @@
+<%- include('partials/header') %>
+
+<main>
+
+    <h1><%= title %></h1>
+
+    <% if (typeof error !== 'undefined') { %>
+
+        <p class="error-message" role="alert">
+            <%= error %>
+        </p>
+
+    <% } %>
+
+    <form action="/new-project" method="POST">
+
+        <div>
+            <label for="project_title">Project Title:</label>
+
+            <input
+                type="text"
+                id="project_title"
+                name="title"
+                value="<%= typeof projectTitle !== 'undefined' ? projectTitle : '' %>"
+                required
+                maxlength="100"
+            >
+        </div>
+
+        <div>
+            <label for="description">Description:</label>
+
+            <textarea
+                id="description"
+                name="description"
+                rows="5"
+            ><%= typeof description !== 'undefined' ? description : '' %></textarea>
+        </div>
+
+        <div>
+            <label for="project_date">Project Date:</label>
+
+            <input
+                type="date"
+                id="project_date"
+                name="project_date"
+                value="<%= typeof project_date !== 'undefined' ? project_date : '' %>"
+            >
+        </div>
+
+        <div>
+            <label for="location">Location:</label>
+
+            <input
+                type="text"
+                id="location"
+                name="location"
+                value="<%= typeof location !== 'undefined' ? location : '' %>"
+            >
+        </div>
+
+        <div>
+            <label for="organization_id">Organization:</label>
+
+            <select
+                id="organization_id"
+                name="organization_id"
+                required
+            >
+
+                <option value="">-- Select an Organization --</option>
+
+                <% organizations.forEach(organization => { %>
+
+                    <option
+                        value="<%= organization.organization_id %>"
+                        <%= typeof organization_id !== 'undefined' &&
+                            String(organization.organization_id) === String(organization_id)
+                            ? 'selected'
+                            : '' %>
+                    >
+                        <%= organization.name %>
+                    </option>
+
+                <% }) %>
+
+            </select>
+        </div>
+
+        <button type="submit">
+            Create Project
+        </button>
+
+    </form>
+
+</main>
+
+<%- include('partials/footer') %>
