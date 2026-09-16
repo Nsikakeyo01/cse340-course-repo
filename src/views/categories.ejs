@@ -4,10 +4,16 @@
 
     <h1><%= title %></h1>
 
+    <p>
+        <a href="/new-category">Create New Category</a>
+    </p>
+
     <% if (messages && messages.notice && messages.notice.length > 0) { %>
+
         <p class="success-message" role="status">
             <%= messages.notice[0] %>
         </p>
+
     <% } %>
 
     <p>
@@ -21,15 +27,21 @@
     <% if (categories && categories.length > 0) { %>
 
         <ul>
+
             <% categories.forEach(category => { %>
+
                 <li>
+
                     <h2>
                         <a href="/category/<%= category.category_id %>">
                             <%= category.name %>
                         </a>
                     </h2>
+
                 </li>
+
             <% }) %>
+
         </ul>
 
     <% } else { %>
