@@ -1,0 +1,42 @@
+<%- include("partials/header") %>
+
+    <main class="container">
+        <h1>My Account</h1>
+
+        <p>Welcome, <%= user.name %>!</p>
+
+        <section>
+            <h2>Account Information</h2>
+
+            <p>
+                <strong>Name:</strong>
+                <%= user.name %>
+            </p>
+
+            <p>
+                <strong>Email:</strong>
+                <%= user.email %>
+            </p>
+
+            <p>
+                <strong>Role:</strong>
+                <%= user.role %>
+            </p>
+        </section>
+
+        <p>
+            <a href="/account/logout">Log Out</a>
+        </p>
+
+        <% if (user.role==='admin' ) { %>
+            <section>
+                <h2>Administration</h2>
+
+                <p>
+                    <a href="/users">View Registered Users</a>
+                </p>
+            </section>
+            <% } %>
+    </main>
+
+    <%- include("partials/footer") %>

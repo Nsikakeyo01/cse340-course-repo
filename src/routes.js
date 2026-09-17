@@ -29,60 +29,237 @@ import {
     editCategoryController
 } from './controllers/categories.js';
 
+import {
+    buildUsersView
+} from './controllers/users.js';
+
+import {
+    showLogin,
+    showRegister,
+    registerAccount,
+    loginAccount,
+    showAccount,
+    logoutAccount
+} from './controllers/account.js';
+
+import {
+    requireLogin,
+    requireRole
+} from './middleware/auth.js';
+
 const router = express.Router();
 
+
+// ============================================
 // Home page
+// ============================================
+
 router.get('/', (req, res) => {
     res.render('home', {
         title: 'Home'
     });
 });
 
+
+// ============================================
 // Organization routes
+// ============================================
+
 router.get('/organizations', showOrganizationsPage);
+
 router.get('/organization/:id', showOrganizationDetailsPage);
 
+
+// ============================================
 // Create organization routes
-router.get('/new-organization', showNewOrganization);
-router.post('/new-organization', createOrganizationController);
+// Admin only
+// ============================================
 
+router.get(
+    '/new-organization',
+    requireRole('admin'),
+    showNewOrganization
+);
+
+router.post(
+    '/new-organization',
+    requireRole('admin'),
+    createOrganizationController
+);
+
+
+// ============================================
 // Edit organization routes
-router.get('/edit-organization/:id', showEditOrganization);
-router.post('/edit-organization/:id', editOrganizationController);
+// Admin only
+// ============================================
 
+router.get(
+    '/edit-organization/:id',
+    requireRole('admin'),
+    showEditOrganization
+);
+
+router.post(
+    '/edit-organization/:id',
+    requireRole('admin'),
+    editOrganizationController
+);
+
+
+// ============================================
 // Project routes
+// ============================================
+
 router.get('/projects', showProjectsPage);
+
 router.get('/project/:id', showProjectDetailsPage);
 
+
+// ============================================
 // Create project routes
-router.get('/new-project', showNewProject);
-router.post('/new-project', createProjectController);
+// Admin only
+// ============================================
 
+router.get(
+    '/new-project',
+    requireRole('admin'),
+    showNewProject
+);
+
+router.post(
+    '/new-project',
+    requireRole('admin'),
+    createProjectController
+);
+
+
+// ============================================
 // Edit project routes
-router.get('/edit-project/:id', showEditProject);
-router.post('/edit-project/:id', editProjectController);
+// Admin only
+// ============================================
 
+router.get(
+    '/edit-project/:id',
+    requireRole('admin'),
+    showEditProject
+);
+
+router.post(
+    '/edit-project/:id',
+    requireRole('admin'),
+    editProjectController
+);
+
+
+// ============================================
 // Update project categories routes
+// Admin only
+// ============================================
+
 router.get(
     '/update-project-categories/:id',
+    requireRole('admin'),
     showUpdateProjectCategories
 );
 
 router.post(
     '/update-project-categories/:id',
+    requireRole('admin'),
     updateProjectCategoriesController
 );
 
+
+// ============================================
 // Category routes
+// ============================================
+
 router.get('/categories', showCategoriesPage);
+
 router.get('/category/:id', showCategoryDetailsPage);
 
-// Create category routes
-router.get('/new-category', showNewCategory);
-router.post('/new-category', createCategoryController);
 
+// ============================================
+// Create category routes
+// Admin only
+// ============================================
+
+router.get(
+    '/new-category',
+    requireRole('admin'),
+    showNewCategory
+);
+
+router.post(
+    '/new-category',
+    requireRole('admin'),
+    createCategoryController
+);
+
+
+// ============================================
 // Edit category routes
-router.get('/edit-category/:id', showEditCategory);
-router.post('/edit-category/:id', editCategoryController);
+// Admin only
+// ============================================
+
+router.get(
+    '/edit-category/:id',
+    requireRole('admin'),
+    showEditCategory
+);
+
+router.post(
+    '/edit-category/:id',
+    requireRole('admin'),
+    editCategoryController
+);
+
+
+// ============================================
+// Users route
+// Admin only
+// ============================================
+
+router.get(
+    '/users',
+    requireRole('admin'),
+    buildUsersView
+);
+
+
+// ============================================
+// Account routes
+// ============================================
+
+router.get(
+    '/account/login',
+    showLogin
+);
+
+router.post(
+    '/account/login',
+    loginAccount
+);
+
+router.get(
+    '/account/register',
+    showRegister
+);
+
+router.post(
+    '/account/register',
+    registerAccount
+);
+
+router.get(
+    '/account',
+    requireLogin,
+    showAccount
+);
+
+router.get(
+    '/account/logout',
+    logoutAccount
+);
+
 
 export default router;

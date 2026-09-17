@@ -1,5 +1,5 @@
 -- ============================================
--- W03 Database Setup
+-- W05 Database Setup
 -- Service Projects
 -- ============================================
 
@@ -8,6 +8,20 @@ DROP TABLE IF EXISTS project_categories;
 DROP TABLE IF EXISTS projects;
 DROP TABLE IF EXISTS categories;
 DROP TABLE IF EXISTS organizations;
+DROP TABLE IF EXISTS users;
+
+
+-- ============================================
+-- Users
+-- ============================================
+
+CREATE TABLE users (
+    user_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(20) NOT NULL DEFAULT 'user'
+);
 
 
 -- ============================================

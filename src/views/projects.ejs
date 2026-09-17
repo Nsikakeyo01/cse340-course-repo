@@ -1,69 +1,73 @@
 <%- include('partials/header') %>
 
-<main>
+    <main>
 
-    <h1><%= title %></h1>
+        <h1>
+            <%= title %>
+        </h1>
 
-    <p>
-        <a href="/new-project">
-            Create New Service Project
-        </a>
-    </p>
+        <% if (user && user.role==='admin' ) { %>
+            <p>
+                <a href="/new-project">
+                    Create New Service Project
+                </a>
+            </p>
+            <% } %>
 
-    <% if (messages && messages.notice && messages.notice.length > 0) { %>
-        <p class="success-message" role="status">
-            <%= messages.notice[0] %>
-        </p>
-    <% } %>
-
-    <% if (projects && projects.length > 0) { %>
-
-        <ul>
-
-            <% projects.forEach(project => { %>
-
-                <li>
-
-                    <h2>
-                        <a href="/project/<%= project.project_id %>">
-                            <%= project.title %>
-                        </a>
-                    </h2>
-
-                    <p>
-                        <%= project.description %>
+                <% if (messages && messages.notice && messages.notice.length> 0) { %>
+                    <p class="success-message" role="status">
+                        <%= messages.notice[0] %>
                     </p>
+                    <% } %>
 
-                    <p>
-                        <strong>Date:</strong>
-                        <%= project.date %>
-                    </p>
+                        <% if (projects && projects.length> 0) { %>
 
-                    <p>
-                        <strong>Location:</strong>
-                        <%= project.location %>
-                    </p>
+                            <ul>
 
-                    <p>
-                        <strong>Organization:</strong>
+                                <% projects.forEach(project=> { %>
 
-                        <a href="/organization/<%= project.organization_id %>">
-                            <%= project.organization_name %>
-                        </a>
-                    </p>
+                                    <li>
 
-                </li>
+                                        <h2>
+                                            <a href="/project/<%= project.project_id %>">
+                                                <%= project.title %>
+                                            </a>
+                                        </h2>
 
-            <% }) %>
+                                        <p>
+                                            <%= project.description %>
+                                        </p>
 
-        </ul>
+                                        <p>
+                                            <strong>Date:</strong>
+                                            <%= project.date %>
+                                        </p>
 
-    <% } else { %>
+                                        <p>
+                                            <strong>Location:</strong>
+                                            <%= project.location %>
+                                        </p>
 
-        <p>No service projects found.</p>
+                                        <p>
+                                            <strong>Organization:</strong>
+                                            <a href="/organization/<%= project.organization_id %>">
+                                                <%= project.organization_name %>
+                                            </a>
+                                        </p>
 
-    <% } %>
+                                    </li>
 
-</main>
+                                    <% }) %>
 
-<%- include('partials/footer') %>
+                            </ul>
+
+                            <% } else { %>
+
+                                <p>No service projects found.</p>
+
+                                <% } %>
+
+
+    </main>
+
+    <%- include('partials/footer') %>

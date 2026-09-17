@@ -1,41 +1,44 @@
 <%- include('partials/header') %>
 
-<main>
+    <main>
 
-    <h1><%= category.name %></h1>
+        <h1>
+            <%= category.name %>
+        </h1>
 
-    <p>
-        <a href="/edit-category/<%= category.category_id %>">
-            Edit Category
-        </a>
-    </p>
+        <% if (user && user.role==='admin' ) { %>
+            <p>
+                <a href="/edit-category/<%= category.category_id %>">
+                    Edit Category
+                </a>
+            </p>
+            <% } %>
 
-    <h2>Service Projects</h2>
+                <h2>Service Projects</h2>
 
-    <% if (projects && projects.length > 0) { %>
+                <% if (projects && projects.length> 0) { %>
 
-        <ul>
+                    <ul>
 
-            <% projects.forEach(project => { %>
+                        <% projects.forEach(project=> { %>
 
-                <li>
+                            <li>
+                                <a href="/project/<%= project.project_id %>">
+                                    <%= project.title %>
+                                </a>
+                            </li>
 
-                    <a href="/project/<%= project.project_id %>">
-                        <%= project.title %>
-                    </a>
+                            <% }) %>
 
-                </li>
+                    </ul>
 
-            <% }) %>
+                    <% } else { %>
 
-        </ul>
+                        <p>No service projects are currently assigned to this category.</p>
 
-    <% } else { %>
+                        <% } %>
 
-        <p>No service projects are currently assigned to this category.</p>
 
-    <% } %>
+    </main>
 
-</main>
-
-<%- include('partials/footer') %>
+    <%- include('partials/footer') %>

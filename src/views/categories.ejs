@@ -1,55 +1,54 @@
 <%- include('partials/header') %>
 
-<main>
+    <main>
+        <h1>
+            <%= title %>
+        </h1>
 
-    <h1><%= title %></h1>
+        <% if (user && user.role==='admin' ) { %>
+            <p>
+                <a href="/new-category">Create New Category</a>
+            </p>
+            <% } %>
 
-    <p>
-        <a href="/new-category">Create New Category</a>
-    </p>
+                <% if (messages && messages.notice && messages.notice.length> 0) { %>
+                    <p class="success-message" role="status">
+                        <%= messages.notice[0] %>
+                    </p>
+                    <% } %>
 
-    <% if (messages && messages.notice && messages.notice.length > 0) { %>
+                        <p>
+                            Explore service opportunities in different areas where volunteers
+                            can contribute their time, skills, and efforts to make a positive
+                            difference in their communities.
+                        </p>
 
-        <p class="success-message" role="status">
-            <%= messages.notice[0] %>
-        </p>
+                        <h2>Service Project Categories</h2>
 
-    <% } %>
+                        <% if (categories && categories.length> 0) { %>
 
-    <p>
-        Explore service opportunities in different areas where volunteers
-        can contribute their time, skills, and efforts to make a positive
-        difference in their communities.
-    </p>
+                            <ul>
 
-    <h2>Service Project Categories</h2>
+                                <% categories.forEach(category=> { %>
 
-    <% if (categories && categories.length > 0) { %>
+                                    <li>
+                                        <h2>
+                                            <a href="/category/<%= category.category_id %>">
+                                                <%= category.name %>
+                                            </a>
+                                        </h2>
+                                    </li>
 
-        <ul>
+                                    <% }) %>
 
-            <% categories.forEach(category => { %>
+                            </ul>
 
-                <li>
+                            <% } else { %>
 
-                    <h2>
-                        <a href="/category/<%= category.category_id %>">
-                            <%= category.name %>
-                        </a>
-                    </h2>
+                                <p>No service project categories found.</p>
 
-                </li>
+                                <% } %>
 
-            <% }) %>
+    </main>
 
-        </ul>
-
-    <% } else { %>
-
-        <p>No service project categories found.</p>
-
-    <% } %>
-
-</main>
-
-<%- include('partials/footer') %>
+    <%- include('partials/footer') %>

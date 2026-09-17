@@ -1,73 +1,63 @@
 <%- include('partials/header') %>
 
-<main>
+    <main>
+        <h1>
+            <%= title %>
+        </h1>
 
-    <h1><%= title %></h1>
+        <p>
+            We work with organizations that are committed to creating meaningful
+            service opportunities and making a positive impact in communities.
+        </p>
 
-    <p>
-        We work with organizations that are committed to creating meaningful
-        service opportunities and making a positive impact in communities.
-    </p>
+        <% if (user && user.role==='admin' ) { %>
+            <p>
+                <a href="/new-organization">Create New Organization</a>
+            </p>
+            <% } %>
 
-    <p>
-        <a href="/new-organization">Create New Organization</a>
-    </p>
+                <h2>Our Partner Organizations</h2>
 
-    <h2>Our Partner Organizations</h2>
+                <% if (organizations && organizations.length> 0) { %>
+                    <ul>
+                        <% organizations.forEach(organization=> { %>
+                            <li>
+                                <% if (organization.logo_filename) { %>
+                                    <img src="/images/<%= organization.logo_filename %>"
+                                        alt="<%= organization.name %> logo">
+                                    <% } %>
 
-    <% if (organizations && organizations.length > 0) { %>
+                                        <h2>
+                                            <a href="/organization/<%= organization.organization_id %>">
+                                                <%= organization.name %>
+                                            </a>
+                                        </h2>
 
-        <ul>
+                                        <p>
+                                            <%= organization.description %>
+                                        </p>
 
-            <% organizations.forEach(organization => { %>
+                                        <p>
+                                            <strong>Email:</strong>
+                                            <a href="mailto:<%= organization.contact_email %>">
+                                                <%= organization.contact_email %>
+                                            </a>
+                                        </p>
 
-                <li>
+                                        <% if (user && user.role==='admin' ) { %>
+                                            <p>
+                                                <a href="/edit-organization/<%= organization.organization_id %>">
+                                                    Edit Organization
+                                                </a>
+                                            </p>
+                                            <% } %>
+                            </li>
+                            <% }) %>
+                    </ul>
+                    <% } else { %>
+                        <p>No partner organizations found.</p>
+                        <% } %>
 
-                    <% if (organization.logo_filename) { %>
+    </main>
 
-                        <img
-                            src="/images/<%= organization.logo_filename %>"
-                            alt="<%= organization.name %> logo"
-                        >
-
-                    <% } %>
-
-                    <h2>
-                        <a href="/organization/<%= organization.organization_id %>">
-                            <%= organization.name %>
-                        </a>
-                    </h2>
-
-                    <p>
-                        <%= organization.description %>
-                    </p>
-
-                    <p>
-                        <strong>Email:</strong>
-
-                        <a href="mailto:<%= organization.contact_email %>">
-                            <%= organization.contact_email %>
-                        </a>
-                    </p>
-
-                    <p>
-                        <a href="/edit-organization/<%= organization.organization_id %>">
-                            Edit Organization
-                        </a>
-                    </p>
-
-                </li>
-
-            <% }) %>
-
-        </ul>
-
-    <% } else { %>
-
-        <p>No partner organizations found.</p>
-
-    <% } %>
-
-</main>
-
-<%- include('partials/footer') %>
+    <%- include('partials/footer') %>

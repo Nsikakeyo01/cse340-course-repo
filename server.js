@@ -17,14 +17,26 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
+
+// ============================================
 // View engine
+// ============================================
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
 
+
+// ============================================
 // Middleware for parsing HTML form submissions
+// ============================================
+
 app.use(express.urlencoded({ extended: true }));
 
+
+// ============================================
 // Session middleware
+// ============================================
+
 app.use(
     session({
         secret: process.env.SESSION_SECRET || 'cse340-development-secret',
@@ -33,29 +45,63 @@ app.use(
     })
 );
 
+
+// ============================================
+// Make logged-in user available to all views
+// ============================================
+
+app.use((req, res, next) => {
+    res.locals.user = req.session.user || null;
+    next();
+});
+
+
+// ============================================
 // Flash message middleware
+// ============================================
+
 app.use(flash());
 
+
+// ============================================
 // Make flash messages available to all EJS views
+// ============================================
+
 app.use((req, res, next) => {
     res.locals.messages = req.flash();
     next();
 });
 
+
+// ============================================
 // Static files
+// ============================================
+
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+// ============================================
 // MVC routes
+// ============================================
+
 app.use('/', routes);
 
+
+// ============================================
 // 404 error handler
+// ============================================
+
 app.use((req, res) => {
     res.status(404).render('404', {
         title: 'Page Not Found'
     });
 });
 
+
+// ============================================
 // 500 error handler
+// ============================================
+
 app.use((err, req, res, next) => {
     console.error('Server error:', err);
 
@@ -64,7 +110,11 @@ app.use((err, req, res, next) => {
     });
 });
 
+
+// ============================================
 // Start server
+// ============================================
+
 app.listen(PORT, async () => {
     try {
         await testConnection();

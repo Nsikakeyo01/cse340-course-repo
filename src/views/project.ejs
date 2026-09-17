@@ -1,74 +1,80 @@
 <%- include('partials/header') %>
 
-<main>
+    <main>
 
-    <% if (messages && messages.notice && messages.notice.length > 0) { %>
-        <p class="success-message" role="status">
-            <%= messages.notice[0] %>
-        </p>
-    <% } %>
+        <% if (messages && messages.notice && messages.notice.length> 0) { %>
+            <p class="success-message" role="status">
+                <%= messages.notice[0] %>
+            </p>
+            <% } %>
 
-    <h1><%= project.title %></h1>
+                <h1>
+                    <%= project.title %>
+                </h1>
 
-    <p>
-        <a href="/edit-project/<%= project.project_id %>">
-            Edit Project
-        </a>
-    </p>
+                <% if (user && user.role==='admin' ) { %>
+                    <p>
+                        <a href="/edit-project/<%= project.project_id %>">
+                            Edit Project
+                        </a>
+                    </p>
+                    <% } %>
 
-    <p>
-        <strong>Description:</strong>
-        <%= project.description %>
-    </p>
+                        <p>
+                            <strong>Description:</strong>
+                            <%= project.description %>
+                        </p>
 
-    <p>
-        <strong>Date:</strong>
-        <%= project.date %>
-    </p>
+                        <p>
+                            <strong>Date:</strong>
+                            <%= project.date %>
+                        </p>
 
-    <p>
-        <strong>Location:</strong>
-        <%= project.location %>
-    </p>
+                        <p>
+                            <strong>Location:</strong>
+                            <%= project.location %>
+                        </p>
 
-    <p>
-        <strong>Organization:</strong>
+                        <p>
+                            <strong>Organization:</strong>
+                            <a href="/organization/<%= project.organization_id %>">
+                                <%= project.organization_name %>
+                            </a>
+                        </p>
 
-        <a href="/organization/<%= project.organization_id %>">
-            <%= project.organization_name %>
-        </a>
-    </p>
+                        <h2>Categories</h2>
 
-    <h2>Categories</h2>
+                        <% if (categories && categories.length> 0) { %>
 
-    <% if (categories && categories.length > 0) { %>
+                            <ul>
 
-        <ul>
+                                <% categories.forEach(category=> { %>
 
-            <% categories.forEach(category => { %>
+                                    <li>
+                                        <a href="/category/<%= category.category_id %>">
+                                            <%= category.name %>
+                                        </a>
+                                    </li>
 
-                <li>
-                    <a href="/category/<%= category.category_id %>">
-                        <%= category.name %>
-                    </a>
-                </li>
+                                    <% }) %>
 
-            <% }) %>
+                            </ul>
 
-        </ul>
+                            <% } else { %>
 
-    <% } else { %>
+                                <p>No categories assigned to this project.</p>
 
-        <p>No categories assigned to this project.</p>
+                                <% } %>
 
-    <% } %>
+                                    <% if (user && user.role==='admin' ) { %>
+                                        <p>
+                                            <a href="/update-project-categories/<%= project.project_id %>">
+                                                Update Project Categories
+                                            </a>
+                                        </p>
+                                        <% } %>
 
-    <p>
-        <a href="/update-project-categories/<%= project.project_id %>">
-            Update Project Categories
-        </a>
-    </p>
 
-</main>
+    </main>
 
-<%- include('partials/footer') %>
+    <%- include('partials/footer') %>
