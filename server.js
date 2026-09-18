@@ -1,3 +1,4 @@
+
 import 'dotenv/config';
 
 import express from 'express';
@@ -39,11 +40,20 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
     session({
-        secret: process.env.SESSION_SECRET || 'cse340-development-secret',
+        secret:
+            process.env.SESSION_SECRET ||
+            'cse340-development-secret',
         resave: false,
         saveUninitialized: false
     })
 );
+
+
+// ============================================
+// Flash message middleware
+// ============================================
+
+app.use(flash());
 
 
 // ============================================
@@ -54,13 +64,6 @@ app.use((req, res, next) => {
     res.locals.user = req.session.user || null;
     next();
 });
-
-
-// ============================================
-// Flash message middleware
-// ============================================
-
-app.use(flash());
 
 
 // ============================================
@@ -119,7 +122,10 @@ app.listen(PORT, async () => {
     try {
         await testConnection();
 
-        console.log(`Server is running at http://127.0.0.1:${PORT}`);
+        console.log(
+            `Server is running at http://127.0.0.1:${PORT}`
+        );
+
         console.log(`Environment: ${NODE_ENV}`);
     } catch (error) {
         console.error(

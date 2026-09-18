@@ -1,3 +1,4 @@
+
 import express from 'express';
 
 import {
@@ -34,18 +35,15 @@ import {
 } from './controllers/users.js';
 
 import {
-    showLogin,
-    showRegister,
-    registerAccount,
-    loginAccount,
-    showAccount,
-    logoutAccount
-} from './controllers/account.js';
-
-import {
+    showUserRegistrationForm,
+    processUserRegistrationForm,
+    showLoginForm,
+    processLoginForm,
+    processLogout,
     requireLogin,
-    requireRole
-} from './middleware/auth.js';
+    requireRole,
+    showDashboard
+} from './controllers/user.js';
 
 const router = express.Router();
 
@@ -65,9 +63,15 @@ router.get('/', (req, res) => {
 // Organization routes
 // ============================================
 
-router.get('/organizations', showOrganizationsPage);
+router.get(
+    '/organizations',
+    showOrganizationsPage
+);
 
-router.get('/organization/:id', showOrganizationDetailsPage);
+router.get(
+    '/organization/:id',
+    showOrganizationDetailsPage
+);
 
 
 // ============================================
@@ -110,9 +114,15 @@ router.post(
 // Project routes
 // ============================================
 
-router.get('/projects', showProjectsPage);
+router.get(
+    '/projects',
+    showProjectsPage
+);
 
-router.get('/project/:id', showProjectDetailsPage);
+router.get(
+    '/project/:id',
+    showProjectDetailsPage
+);
 
 
 // ============================================
@@ -173,9 +183,15 @@ router.post(
 // Category routes
 // ============================================
 
-router.get('/categories', showCategoriesPage);
+router.get(
+    '/categories',
+    showCategoriesPage
+);
 
-router.get('/category/:id', showCategoryDetailsPage);
+router.get(
+    '/category/:id',
+    showCategoryDetailsPage
+);
 
 
 // ============================================
@@ -227,38 +243,45 @@ router.get(
 
 
 // ============================================
-// Account routes
+// Authentication routes
 // ============================================
 
-router.get(
-    '/account/login',
-    showLogin
-);
-
-router.post(
-    '/account/login',
-    loginAccount
-);
-
+// Registration form
 router.get(
     '/account/register',
-    showRegister
+    showUserRegistrationForm
 );
 
+// Process registration
 router.post(
     '/account/register',
-    registerAccount
+    processUserRegistrationForm
 );
 
+// Login form
+router.get(
+    '/account/login',
+    showLoginForm
+);
+
+// Process login
+router.post(
+    '/account/login',
+    processLoginForm
+);
+
+// Dashboard / account page
+// Login required
 router.get(
     '/account',
     requireLogin,
-    showAccount
+    showDashboard
 );
 
+// Logout
 router.get(
     '/account/logout',
-    logoutAccount
+    processLogout
 );
 
 
