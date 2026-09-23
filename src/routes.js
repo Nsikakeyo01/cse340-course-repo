@@ -45,23 +45,18 @@ import {
     showDashboard
 } from './controllers/user.js';
 
+import {
+    addVolunteerController,
+    removeVolunteerController
+} from './controllers/volunteering.js';
+
 const router = express.Router();
-
-
-// ============================================
-// Home page
-// ============================================
 
 router.get('/', (req, res) => {
     res.render('home', {
         title: 'Home'
     });
 });
-
-
-// ============================================
-// Organization routes
-// ============================================
 
 router.get(
     '/organizations',
@@ -72,12 +67,6 @@ router.get(
     '/organization/:id',
     showOrganizationDetailsPage
 );
-
-
-// ============================================
-// Create organization routes
-// Admin only
-// ============================================
 
 router.get(
     '/new-organization',
@@ -91,12 +80,6 @@ router.post(
     createOrganizationController
 );
 
-
-// ============================================
-// Edit organization routes
-// Admin only
-// ============================================
-
 router.get(
     '/edit-organization/:id',
     requireRole('admin'),
@@ -109,11 +92,6 @@ router.post(
     editOrganizationController
 );
 
-
-// ============================================
-// Project routes
-// ============================================
-
 router.get(
     '/projects',
     showProjectsPage
@@ -124,11 +102,25 @@ router.get(
     showProjectDetailsPage
 );
 
+/* W06 VOLUNTEERING ROUTES */
 
-// ============================================
-// Create project routes
-// Admin only
-// ============================================
+router.post(
+    '/project/:id/volunteer',
+    (req, res, next) => {
+        console.log('VOLUNTEER ROUTE REACHED');
+        next();
+    },
+    requireLogin,
+    addVolunteerController
+);
+
+router.post(
+    '/project/:id/remove-volunteer',
+    requireLogin,
+    removeVolunteerController
+);
+
+/* END W06 VOLUNTEERING ROUTES */
 
 router.get(
     '/new-project',
@@ -142,12 +134,6 @@ router.post(
     createProjectController
 );
 
-
-// ============================================
-// Edit project routes
-// Admin only
-// ============================================
-
 router.get(
     '/edit-project/:id',
     requireRole('admin'),
@@ -159,12 +145,6 @@ router.post(
     requireRole('admin'),
     editProjectController
 );
-
-
-// ============================================
-// Update project categories routes
-// Admin only
-// ============================================
 
 router.get(
     '/update-project-categories/:id',
@@ -178,11 +158,6 @@ router.post(
     updateProjectCategoriesController
 );
 
-
-// ============================================
-// Category routes
-// ============================================
-
 router.get(
     '/categories',
     showCategoriesPage
@@ -192,12 +167,6 @@ router.get(
     '/category/:id',
     showCategoryDetailsPage
 );
-
-
-// ============================================
-// Create category routes
-// Admin only
-// ============================================
 
 router.get(
     '/new-category',
@@ -211,12 +180,6 @@ router.post(
     createCategoryController
 );
 
-
-// ============================================
-// Edit category routes
-// Admin only
-// ============================================
-
 router.get(
     '/edit-category/:id',
     requireRole('admin'),
@@ -229,60 +192,41 @@ router.post(
     editCategoryController
 );
 
-
-// ============================================
-// Users route
-// Admin only
-// ============================================
-
 router.get(
     '/users',
     requireRole('admin'),
     buildUsersView
 );
 
-
-// ============================================
-// Authentication routes
-// ============================================
-
-// Registration form
 router.get(
     '/account/register',
     showUserRegistrationForm
 );
 
-// Process registration
 router.post(
     '/account/register',
     processUserRegistrationForm
 );
 
-// Login form
 router.get(
     '/account/login',
     showLoginForm
 );
 
-// Process login
 router.post(
     '/account/login',
     processLoginForm
 );
 
-// Dashboard / account page
-// Login required
 router.get(
     '/account',
     requireLogin,
     showDashboard
 );
 
-// Logout
 router.get(
     '/account/logout',
     processLogout
 );
-
 
 export default router;

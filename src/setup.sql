@@ -1,9 +1,14 @@
+
 -- ============================================
--- W05 Database Setup
--- Service Projects
+-- W06 Database Setup
+-- CSE 340 Service Network
 -- ============================================
 
+-- ============================================
 -- Remove existing tables if they exist
+-- ============================================
+
+DROP TABLE IF EXISTS volunteers;
 DROP TABLE IF EXISTS project_categories;
 DROP TABLE IF EXISTS projects;
 DROP TABLE IF EXISTS categories;
@@ -85,6 +90,31 @@ CREATE TABLE project_categories (
     CONSTRAINT fk_project_categories_category
         FOREIGN KEY (category_id)
         REFERENCES categories (category_id)
+        ON DELETE CASCADE
+);
+
+
+-- ============================================
+-- Volunteers
+-- W06 many-to-many relationship
+-- Users can volunteer for multiple projects.
+-- Projects can have multiple volunteers.
+-- ============================================
+
+CREATE TABLE volunteers (
+    user_id INTEGER NOT NULL,
+    project_id INTEGER NOT NULL,
+
+    PRIMARY KEY (user_id, project_id),
+
+    CONSTRAINT fk_volunteers_user
+        FOREIGN KEY (user_id)
+        REFERENCES users (user_id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_volunteers_project
+        FOREIGN KEY (project_id)
+        REFERENCES projects (project_id)
         ON DELETE CASCADE
 );
 
@@ -179,7 +209,6 @@ VALUES
         '2026-10-05'
     ),
 
-
     -- GreenHarvest Growers
 
     (
@@ -221,7 +250,6 @@ VALUES
         'Green Harvest Farm',
         '2026-10-10'
     ),
-
 
     -- UnityServe Volunteers
 
@@ -275,26 +303,26 @@ INSERT INTO project_categories
 VALUES
 
     -- BrightFuture Builders
-    (1, 1), -- After-School Tutoring → Education
-    (2, 1), -- Digital Literacy Workshop → Education
-    (3, 1), -- School Supplies Drive → Education
-    (4, 1), -- Youth Mentorship Program → Education
-    (5, 1), -- Reading Club → Education
+    (1, 1),
+    (2, 1),
+    (3, 1),
+    (4, 1),
+    (5, 1),
 
     -- GreenHarvest Growers
-    (6, 2), -- Community Garden → Environment
-    (6, 5), -- Community Garden → Food Security
-    (7, 2), -- Tree Planting Day → Environment
-    (8, 2), -- Recycling Campaign → Environment
-    (9, 2), -- Clean Water Initiative → Environment
-    (9, 4), -- Clean Water Initiative → Health
-    (10, 2), -- Environmental Awareness Fair → Environment
+    (6, 2),
+    (6, 5),
+    (7, 2),
+    (8, 2),
+    (9, 2),
+    (9, 4),
+    (10, 2),
 
     -- UnityServe Volunteers
-    (11, 5), -- Community Food Drive → Food Security
-    (11, 3), -- Community Food Drive → Community Development
-    (12, 3), -- Neighborhood Cleanup → Community Development
-    (13, 4), -- Health Awareness Day → Health
-    (14, 3), -- Senior Support Program → Community Development
-    (14, 4), -- Senior Support Program → Health
-    (15, 3); -- Community Volunteer Day → Community Development
+    (11, 5),
+    (11, 3),
+    (12, 3),
+    (13, 4),
+    (14, 3),
+    (14, 4),
+    (15, 3);

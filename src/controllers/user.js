@@ -6,6 +6,9 @@ import {
     registerUser
 } from '../models/users.js';
 
+import {
+    getProjectsByUser
+} from '../models/volunteering.js';
 
 // ============================================
 // Show User Registration Form
@@ -16,7 +19,6 @@ async function showUserRegistrationForm(req, res) {
         title: 'Register'
     });
 }
-
 
 // ============================================
 // Process User Registration Form
@@ -66,7 +68,6 @@ async function processUserRegistrationForm(req, res, next) {
     }
 }
 
-
 // ============================================
 // Show Login Form
 // ============================================
@@ -76,7 +77,6 @@ async function showLoginForm(req, res) {
         title: 'Login'
     });
 }
-
 
 // ============================================
 // Process Login Form
@@ -139,23 +139,18 @@ async function processLoginForm(req, res, next) {
     }
 }
 
-
 // ============================================
 // Process Logout
 // ============================================
 
 function processLogout(req, res, next) {
-    // Remove the authenticated user from the session.
     req.session.user = null;
 
-    // Add logout confirmation message.
     req.flash(
         'notice',
         'You have been successfully logged out.'
     );
 
-    // Save the session so the flash message survives
-    // the redirect to the home page.
     req.session.save(error => {
         if (error) {
             return next(error);
@@ -164,7 +159,6 @@ function processLogout(req, res, next) {
         return res.redirect('/');
     });
 }
-
 
 // ============================================
 // Require Login
@@ -182,7 +176,6 @@ function requireLogin(req, res, next) {
 
     next();
 }
-
 
 // ============================================
 // Require Specific Role
@@ -212,21 +205,36 @@ function requireRole(requiredRole) {
     };
 }
 
-
 // ============================================
 // Show Dashboard
 // ============================================
 
-async function showDashboard(req, res) {
-    res.render('account', {
-        title: 'Account',
-        user: req.session.user
-    });
+async function showDashboard(req, res, next) {
+    try {
+        const user = req.session.user;
+
+        const volunteerProjects = await getProjectsByUser(
+            user.user_id
+        );
+
+        res.render('account', {
+            title: 'Account',
+            user,
+            volunteerProjects
+        });
+
+    } catch (error) {
+        console.error(
+            'ERROR LOADING ACCOUNT DASHBOARD:',
+            error
+        );
+
+        next(error);
+    }
 }
 
-
 // ============================================
-// Export controller functions
+// Export Controller Functions
 // ============================================
 
 export {

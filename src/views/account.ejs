@@ -4,47 +4,108 @@
 
         <h1>My Account</h1>
 
-        <% if (messages && messages.notice && messages.notice.length> 0) { %>
-            <p class="success-message" role="status">
-                <%= messages.notice[0] %>
-            </p>
-            <% } %>
+        <p>Welcome, <%= user.name %>!</p>
 
-                <p>Welcome, <%= user.name %>!</p>
+        <section>
+            <h2>Account Information</h2>
+
+            <p>
+                <strong>Name:</strong>
+                <%= user.name %>
+            </p>
+
+            <p>
+                <strong>Email:</strong>
+                <%= user.email %>
+            </p>
+
+            <p>
+                <strong>Role:</strong>
+                <%= user.role %>
+            </p>
+        </section>
+
+        <% if (volunteerProjects && volunteerProjects.length> 0) { %>
+
+            <section>
+                <h2>My Volunteering</h2>
+
+                <p>Projects you are volunteering for:</p>
+
+                <ul>
+                    <% volunteerProjects.forEach(project=> { %>
+
+                        <li>
+                            <h3>
+                                <a href="/project/<%= project.project_id %>">
+                                    <%= project.title %>
+                                </a>
+                            </h3>
+
+                            <% if (project.organization_name) { %>
+                                <p>
+                                    <strong>Organization:</strong>
+                                    <%= project.organization_name %>
+                                </p>
+                                <% } %>
+
+                                    <% if (project.location) { %>
+                                        <p>
+                                            <strong>Location:</strong>
+                                            <%= project.location %>
+                                        </p>
+                                        <% } %>
+
+                                            <form action="/project/<%= project.project_id %>/remove-volunteer"
+                                                method="POST">
+                                                <button type="submit">
+                                                    Remove Volunteering
+                                                </button>
+                                            </form>
+                        </li>
+
+                        <% }) %>
+                </ul>
+
+            </section>
+
+            <% } else { %>
 
                 <section>
-                    <h2>Account Information</h2>
+                    <h2>My Volunteering</h2>
 
                     <p>
-                        <strong>Name:</strong>
-                        <%= user.name %>
+                        You are not currently volunteering for any projects.
                     </p>
 
                     <p>
-                        <strong>Email:</strong>
-                        <%= user.email %>
-                    </p>
-
-                    <p>
-                        <strong>Role:</strong>
-                        <%= user.role %>
+                        <a href="/projects">
+                            Browse Service Projects
+                        </a>
                     </p>
                 </section>
 
-                <p>
-                    <a href="/account/logout">Log Out</a>
-                </p>
+                <% } %>
 
-                <% if (user.role==='admin' ) { %>
-                    <section>
-                        <h2>Administration</h2>
+                    <p>
+                        <a href="/account/logout">
+                            Log Out
+                        </a>
+                    </p>
 
-                        <p>
-                            <a href="/users">View Registered Users</a>
-                        </p>
-                    </section>
-                    <% } %>
+                    <% if (user.role==='admin' ) { %>
 
+                        <section>
+                            <h2>Administration</h2>
+
+                            <p>
+                                <a href="/users">
+                                    View Registered Users
+                                </a>
+                            </p>
+                        </section>
+
+                        <% } %>
 
     </main>
 

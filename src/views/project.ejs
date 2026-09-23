@@ -45,25 +45,17 @@
                         <h2>Categories</h2>
 
                         <% if (categories && categories.length> 0) { %>
-
                             <ul>
-
                                 <% categories.forEach(category=> { %>
-
                                     <li>
                                         <a href="/category/<%= category.category_id %>">
                                             <%= category.name %>
                                         </a>
                                     </li>
-
                                     <% }) %>
-
                             </ul>
-
                             <% } else { %>
-
                                 <p>No categories assigned to this project.</p>
-
                                 <% } %>
 
                                     <% if (user && user.role==='admin' ) { %>
@@ -74,6 +66,49 @@
                                         </p>
                                         <% } %>
 
+                                            <!-- W06 VOLUNTEERING FEATURE -->
+                                            <% if (user) { %>
+
+                                                <section class="volunteer-section">
+
+                                                    <h2>Volunteering</h2>
+
+                                                    <% if (isVolunteer) { %>
+
+                                                        <p>
+                                                            You are volunteering for this project.
+                                                        </p>
+
+                                                        <form
+                                                            action="/project/<%= project.project_id %>/remove-volunteer"
+                                                            method="POST">
+
+                                                            <button type="submit">
+                                                                Remove Volunteering
+                                                            </button>
+
+                                                        </form>
+
+                                                        <% } else { %>
+
+                                                            <p>
+                                                                Interested in helping with this project?
+                                                            </p>
+
+                                                            <form action="/project/<%= project.project_id %>/volunteer"
+                                                                method="POST">
+
+                                                                <button type="submit">
+                                                                    Volunteer for This Project
+                                                                </button>
+
+                                                            </form>
+
+                                                            <% } %>
+
+                                                </section>
+
+                                                <% } %>
 
     </main>
 

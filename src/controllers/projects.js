@@ -11,15 +11,20 @@ import {
 
 import { getAllOrganizations } from '../models/organizations.js';
 
+import { checkVolunteer } from '../models/volunteering.js';
+
+
 const showProjectsPage = async (req, res) => {
     try {
         const title = 'Service Projects';
+
         const projects = await getAllProjects();
 
         res.render('projects', {
             title,
             projects
         });
+
     } catch (error) {
         console.error('Error loading projects:', error);
 
@@ -29,12 +34,16 @@ const showProjectsPage = async (req, res) => {
     }
 };
 
+
 const showProjectDetailsPage = async (req, res) => {
     try {
         const projectId = req.params.id;
 
         const project = await getProjectDetails(projectId);
-        const categories = await getCategoriesByProjectId(projectId);
+
+        const categories =
+            await getCategoriesByProjectId(projectId);
+
 
         if (!project) {
             return res.status(404).render('404', {
@@ -42,13 +51,34 @@ const showProjectDetailsPage = async (req, res) => {
             });
         }
 
+
+        // Default to false for users who are not logged in.
+        let isVolunteer = false;
+
+
+        // Check whether the logged-in user has volunteered
+        // for this particular project.
+        if (req.session.user) {
+            isVolunteer = await checkVolunteer(
+                req.session.user.user_id,
+                projectId
+            );
+        }
+
+
         res.render('project', {
             title: project.title,
             project,
-            categories
+            categories,
+            isVolunteer
         });
+
+
     } catch (error) {
-        console.error('Error loading project details:', error);
+        console.error(
+            'Error loading project details:',
+            error
+        );
 
         res.status(500).render('500', {
             title: 'Server Error'
@@ -56,22 +86,29 @@ const showProjectDetailsPage = async (req, res) => {
     }
 };
 
+
 const showNewProject = async (req, res) => {
     try {
-        const organizations = await getAllOrganizations();
+        const organizations =
+            await getAllOrganizations();
 
         res.render('new-project', {
             title: 'Create New Service Project',
             organizations
         });
+
     } catch (error) {
-        console.error('Error loading new project page:', error);
+        console.error(
+            'Error loading new project page:',
+            error
+        );
 
         res.status(500).render('500', {
             title: 'Server Error'
         });
     }
 };
+
 
 const createProjectController = async (req, res) => {
     try {
@@ -83,65 +120,91 @@ const createProjectController = async (req, res) => {
             organization_id
         } = req.body;
 
+
         title = title ? title.trim() : '';
         description = description ? description.trim() : '';
         project_date = project_date ? project_date.trim() : '';
         location = location ? location.trim() : '';
-        organization_id = organization_id ? organization_id.trim() : '';
+        organization_id =
+            organization_id
+                ? organization_id.trim()
+                : '';
 
-        const organizations = await getAllOrganizations();
+
+        const organizations =
+            await getAllOrganizations();
+
 
         if (!title) {
-            return res.status(400).render('new-project', {
-                title: 'Create New Service Project',
-                error: 'Project title is required.',
-                projectTitle: title,
-                description,
-                project_date,
-                location,
-                organization_id,
-                organizations
-            });
+            return res.status(400).render(
+                'new-project',
+                {
+                    title: 'Create New Service Project',
+                    error: 'Project title is required.',
+                    projectTitle: title,
+                    description,
+                    project_date,
+                    location,
+                    organization_id,
+                    organizations
+                }
+            );
         }
+
 
         if (title.length < 3) {
-            return res.status(400).render('new-project', {
-                title: 'Create New Service Project',
-                error: 'Project title must be at least 3 characters long.',
-                projectTitle: title,
-                description,
-                project_date,
-                location,
-                organization_id,
-                organizations
-            });
+            return res.status(400).render(
+                'new-project',
+                {
+                    title: 'Create New Service Project',
+                    error:
+                        'Project title must be at least 3 characters long.',
+                    projectTitle: title,
+                    description,
+                    project_date,
+                    location,
+                    organization_id,
+                    organizations
+                }
+            );
         }
+
 
         if (title.length > 100) {
-            return res.status(400).render('new-project', {
-                title: 'Create New Service Project',
-                error: 'Project title must not exceed 100 characters.',
-                projectTitle: title,
-                description,
-                project_date,
-                location,
-                organization_id,
-                organizations
-            });
+            return res.status(400).render(
+                'new-project',
+                {
+                    title: 'Create New Service Project',
+                    error:
+                        'Project title must not exceed 100 characters.',
+                    projectTitle: title,
+                    description,
+                    project_date,
+                    location,
+                    organization_id,
+                    organizations
+                }
+            );
         }
 
+
         if (!organization_id) {
-            return res.status(400).render('new-project', {
-                title: 'Create New Service Project',
-                error: 'Please select an organization.',
-                projectTitle: title,
-                description,
-                project_date,
-                location,
-                organization_id,
-                organizations
-            });
+            return res.status(400).render(
+                'new-project',
+                {
+                    title: 'Create New Service Project',
+                    error:
+                        'Please select an organization.',
+                    projectTitle: title,
+                    description,
+                    project_date,
+                    location,
+                    organization_id,
+                    organizations
+                }
+            );
         }
+
 
         await createProject(
             title,
@@ -151,11 +214,21 @@ const createProjectController = async (req, res) => {
             organization_id
         );
 
-        req.flash('notice', 'Service project created successfully.');
+
+        req.flash(
+            'notice',
+            'Service project created successfully.'
+        );
+
 
         res.redirect('/projects');
+
+
     } catch (error) {
-        console.error('Error creating project:', error);
+        console.error(
+            'Error creating project:',
+            error
+        );
 
         res.status(500).render('500', {
             title: 'Server Error'
@@ -163,11 +236,14 @@ const createProjectController = async (req, res) => {
     }
 };
 
+
 const showEditProject = async (req, res) => {
     try {
         const projectId = req.params.id;
 
-        const project = await getProjectDetails(projectId);
+        const project =
+            await getProjectDetails(projectId);
+
 
         if (!project) {
             return res.status(404).render('404', {
@@ -175,24 +251,42 @@ const showEditProject = async (req, res) => {
             });
         }
 
-        const organizations = await getAllOrganizations();
+
+        const organizations =
+            await getAllOrganizations();
+
 
         res.render('edit-project', {
             title: 'Edit Service Project',
+
             project: {
                 project_id: project.project_id,
                 title: project.title || '',
-                description: project.description || '',
+                description:
+                    project.description || '',
+
                 date: project.date
-                    ? new Date(project.date).toISOString().split('T')[0]
+                    ? new Date(project.date)
+                        .toISOString()
+                        .split('T')[0]
                     : '',
-                location: project.location || '',
-                organization_id: project.organization_id
+
+                location:
+                    project.location || '',
+
+                organization_id:
+                    project.organization_id
             },
+
             organizations
         });
+
+
     } catch (error) {
-        console.error('Error loading edit project page:', error);
+        console.error(
+            'Error loading edit project page:',
+            error
+        );
 
         res.status(500).render('500', {
             title: 'Server Error'
@@ -200,9 +294,11 @@ const showEditProject = async (req, res) => {
     }
 };
 
+
 const editProjectController = async (req, res) => {
     try {
         const projectId = req.params.id;
+
 
         let {
             title,
@@ -212,86 +308,123 @@ const editProjectController = async (req, res) => {
             organization_id
         } = req.body;
 
+
         title = title ? title.trim() : '';
         description = description ? description.trim() : '';
         project_date = project_date ? project_date.trim() : '';
         location = location ? location.trim() : '';
-        organization_id = organization_id ? organization_id.trim() : '';
+        organization_id =
+            organization_id
+                ? organization_id.trim()
+                : '';
 
-        const organizations = await getAllOrganizations();
+
+        const organizations =
+            await getAllOrganizations();
+
 
         if (!title) {
-            return res.status(400).render('edit-project', {
-                title: 'Edit Service Project',
-                error: 'Project title is required.',
-                project: {
-                    project_id: projectId,
-                    title,
-                    description,
-                    date: project_date,
-                    location,
-                    organization_id
-                },
-                organizations
-            });
+            return res.status(400).render(
+                'edit-project',
+                {
+                    title: 'Edit Service Project',
+                    error:
+                        'Project title is required.',
+
+                    project: {
+                        project_id: projectId,
+                        title,
+                        description,
+                        date: project_date,
+                        location,
+                        organization_id
+                    },
+
+                    organizations
+                }
+            );
         }
+
 
         if (title.length < 3) {
-            return res.status(400).render('edit-project', {
-                title: 'Edit Service Project',
-                error: 'Project title must be at least 3 characters long.',
-                project: {
-                    project_id: projectId,
-                    title,
-                    description,
-                    date: project_date,
-                    location,
-                    organization_id
-                },
-                organizations
-            });
+            return res.status(400).render(
+                'edit-project',
+                {
+                    title: 'Edit Service Project',
+                    error:
+                        'Project title must be at least 3 characters long.',
+
+                    project: {
+                        project_id: projectId,
+                        title,
+                        description,
+                        date: project_date,
+                        location,
+                        organization_id
+                    },
+
+                    organizations
+                }
+            );
         }
+
 
         if (title.length > 100) {
-            return res.status(400).render('edit-project', {
-                title: 'Edit Service Project',
-                error: 'Project title must not exceed 100 characters.',
-                project: {
-                    project_id: projectId,
-                    title,
-                    description,
-                    date: project_date,
-                    location,
-                    organization_id
-                },
-                organizations
-            });
+            return res.status(400).render(
+                'edit-project',
+                {
+                    title: 'Edit Service Project',
+                    error:
+                        'Project title must not exceed 100 characters.',
+
+                    project: {
+                        project_id: projectId,
+                        title,
+                        description,
+                        date: project_date,
+                        location,
+                        organization_id
+                    },
+
+                    organizations
+                }
+            );
         }
+
 
         if (!organization_id) {
-            return res.status(400).render('edit-project', {
-                title: 'Edit Service Project',
-                error: 'Please select an organization.',
-                project: {
-                    project_id: projectId,
-                    title,
-                    description,
-                    date: project_date,
-                    location,
-                    organization_id
-                },
-                organizations
-            });
+            return res.status(400).render(
+                'edit-project',
+                {
+                    title: 'Edit Service Project',
+                    error:
+                        'Please select an organization.',
+
+                    project: {
+                        project_id: projectId,
+                        title,
+                        description,
+                        date: project_date,
+                        location,
+                        organization_id
+                    },
+
+                    organizations
+                }
+            );
         }
 
-        const updatedProject = await updateProject(
-            projectId,
-            title,
-            description,
-            project_date,
-            location,
-            organization_id
-        );
+
+        const updatedProject =
+            await updateProject(
+                projectId,
+                title,
+                description,
+                project_date,
+                location,
+                organization_id
+            );
+
 
         if (!updatedProject) {
             return res.status(404).render('404', {
@@ -299,23 +432,37 @@ const editProjectController = async (req, res) => {
             });
         }
 
-        req.flash('notice', 'Service project updated successfully.');
+
+        req.flash(
+            'notice',
+            'Service project updated successfully.'
+        );
+
 
         res.redirect('/projects');
+
+
     } catch (error) {
-        console.error('Error updating project:', error);
+        console.error(
+            'Error updating project:',
+            error
+        );
 
         res.status(500).render('500', {
             title: 'Server Error'
         });
     }
 };
+
 
 const showUpdateProjectCategories = async (req, res) => {
     try {
         const projectId = req.params.id;
 
-        const project = await getProjectDetails(projectId);
+
+        const project =
+            await getProjectDetails(projectId);
+
 
         if (!project) {
             return res.status(404).render('404', {
@@ -323,18 +470,37 @@ const showUpdateProjectCategories = async (req, res) => {
             });
         }
 
-        const categories = await getAllCategories();
-        const assignedCategoryIds =
-            await getCategoryIdsByProjectId(projectId);
 
-        res.render('update-project-categories', {
-            title: 'Update Project Categories',
-            project,
-            categories,
-            assignedCategoryIds
-        });
+        const categories =
+            await getAllCategories();
+
+
+        const assignedCategoryIds =
+            await getCategoryIdsByProjectId(
+                projectId
+            );
+
+
+        res.render(
+            'update-project-categories',
+            {
+                title:
+                    'Update Project Categories',
+
+                project,
+
+                categories,
+
+                assignedCategoryIds
+            }
+        );
+
+
     } catch (error) {
-        console.error('Error loading project categories:', error);
+        console.error(
+            'Error loading project categories:',
+            error
+        );
 
         res.status(500).render('500', {
             title: 'Server Error'
@@ -342,11 +508,18 @@ const showUpdateProjectCategories = async (req, res) => {
     }
 };
 
-const updateProjectCategoriesController = async (req, res) => {
+
+const updateProjectCategoriesController = async (
+    req,
+    res
+) => {
     try {
         const projectId = req.params.id;
 
-        const project = await getProjectDetails(projectId);
+
+        const project =
+            await getProjectDetails(projectId);
+
 
         if (!project) {
             return res.status(404).render('404', {
@@ -354,28 +527,45 @@ const updateProjectCategoriesController = async (req, res) => {
             });
         }
 
-        let categoryIds = req.body.category_ids || [];
+
+        let categoryIds =
+            req.body.category_ids || [];
+
 
         if (!Array.isArray(categoryIds)) {
             categoryIds = [categoryIds];
         }
 
-        await updateProjectCategories(projectId, categoryIds);
+
+        await updateProjectCategories(
+            projectId,
+            categoryIds
+        );
+
 
         req.flash(
             'notice',
             'Project categories updated successfully.'
         );
 
-        res.redirect(`/project/${projectId}`);
+
+        res.redirect(
+            `/project/${projectId}`
+        );
+
+
     } catch (error) {
-        console.error('Error updating project categories:', error);
+        console.error(
+            'Error updating project categories:',
+            error
+        );
 
         res.status(500).render('500', {
             title: 'Server Error'
         });
     }
 };
+
 
 export {
     showProjectsPage,
